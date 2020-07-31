@@ -31,6 +31,11 @@ def count_result(data: str, emo: list) -> list:
     return sorted(values_emotions.items(), key=operator.itemgetter(1), reverse=True)[:2]
 
 
+def write_txt(result: list):
+    with open('text_out.txt', 'w') as f:
+        f.write(f'{result[0]}{result[1]}')
+
+
 def use_module(path=None) -> list:
     parser = createParser()
     namespace = parser.parse_args()
@@ -72,7 +77,10 @@ def use_module(path=None) -> list:
         arg = result.argmax()
         result_model.append((emo[arg], (result[0][arg])))
 
-    return count_result(result_model, emo)
+    result = count_result(result_model, emo)
+    write_txt(result)
+
+    return result
 
 
 if __name__ == '__main__': print(use_module())

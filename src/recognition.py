@@ -23,8 +23,6 @@ def recordiring_text(filename: str) -> list:
                 print(words)
                 text.append(words)
 
-
-
             await websocket.send('{"eof" : 1}')
             words = await websocket.recv()
             print(words)
