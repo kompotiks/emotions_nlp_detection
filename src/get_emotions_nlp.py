@@ -44,7 +44,7 @@ def use_module(path=None) -> list:
 
     chunks_dir = 'data/chunks/'
     chunks_dir_text = 'data/chunks_text/'
-    emo = ['anger', 'fear', 'joy', 'love', 'sadness', 'surprise']
+    emo = ['angry', 'fear', 'happy', 'love', 'sadness', 'surprise']
 
     if not os.path.exists(chunks_dir):
         os.makedirs(chunks_dir)
