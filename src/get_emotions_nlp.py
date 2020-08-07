@@ -46,6 +46,8 @@ def use_module(path=None) -> list:
     chunks_dir_text = 'data/chunks_text/'
     emo = ['angry', 'fear', 'happy', 'love', 'sadness', 'surprise']
 
+    os.system('docker run -d -p 2700:2700 alphacep/kaldi-ru:latest')
+
     if not os.path.exists(chunks_dir):
         os.makedirs(chunks_dir)
     else:
