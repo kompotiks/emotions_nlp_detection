@@ -1,33 +1,24 @@
-import asyncio
-import websockets
-import wave
+from vosk import Model, KaldiRecognizer
+import sys
+import json
+import os
 
 
-def recordiring_text(filename: str) -> list:
-    text = []
+def recognition_text(file_path):
+    model = Model("model/model_vosk")
 
-    async def hello(uri):
-        async with websockets.connect(uri) as websocket:
-            wf = wave.open(filename, "rb")
-            await websocket.send('''{"config" : 
-                        { "word_list" : "zero one two three four five six seven eight nine oh",
-                        "sample_rate" : 16000.0}}''')
-            while True:
-                data = wf.readframes(8000)
+    # Large vocabulary free form recognition
+    rec = KaldiRecognizer(model, 16000)
 
-                if len(data) == 0:
-                    break
+    wf = open(file_path, "rb")
+    wf.read(44) # skip header
 
-                await websocket.send(data)
-                words = await websocket.recv()
-                print(words)
-                text.append(words)
+    while True:
+        data = wf.read(4000)
+        if len(data) == 0:
+            break
+        if rec.AcceptWaveform(data):
+            res = json.loads(rec.Result())
 
-            await websocket.send('{"eof" : 1}')
-            words = await websocket.recv()
-            print(words)
-            text.append(words)
-
-    asyncio.get_event_loop().run_until_complete(
-        hello('ws://localhost:2700'))
-    return text
+    res = json.loads(rec.FinalResult())
+    return res['text']

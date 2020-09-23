@@ -1,8 +1,7 @@
 from src.split_audio import split_audio
-from src.recognition import recordiring_text
 from src.convert_audio import convert_audio
-from src.preprocessing_text import parsing_output_vosk
 from src.predict_nlp import prediction
+from src.recognition import recognition_text
 
 import operator
 import os
@@ -46,8 +45,6 @@ def use_module(path=None) -> list:
     chunks_dir_text = 'data/chunks_text/'
     emo = ['angry', 'fear', 'happy', 'love', 'sadness', 'surprise']
 
-    os.system('docker run -d -p 2700:2700 alphacep/kaldi-ru:latest')
-
     if not os.path.exists(chunks_dir):
         os.makedirs(chunks_dir)
     else:
@@ -64,16 +61,12 @@ def use_module(path=None) -> list:
 
     raw_text = []
     for file in os.listdir(chunks_dir_text):
-        raw_text.append(recordiring_text(chunks_dir_text + file))
-
-    data = []
-    for sample in raw_text:
-        data.append(parsing_output_vosk(sample))
+        raw_text.append(recognition_text(chunks_dir_text + file))
 
     result_model_full = []
     result_model = []
-    for sample in data:
-        sample = ' '.join([text[0] for text in sample])
+    for sample in raw_text:
+        # sample = ' '.join([text for text in sample])
         result = prediction(sample).cpu().detach().numpy()
         result_model_full.append(result)
         arg = result.argmax()

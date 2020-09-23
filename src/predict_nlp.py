@@ -11,7 +11,7 @@ class BERTClassifierModel(nn.Module):
         self.number_of_classes = num_classes
         self.dropout = nn.Dropout(0.01)
         self.hidden_size = hidden_size
-        self.bert = BertModel.from_pretrained('model/pytorch_model.bin', config=config)
+        self.bert = BertModel(config=config)#.from_pretrained('model/pytorch_model.bin', config=config)
         self.classifier = nn.Linear(hidden_size, num_classes)
 
     def forward(self, inputs):
